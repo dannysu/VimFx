@@ -66,6 +66,21 @@ command_vf = (vim) ->
   if markers?.length > 0
     vim.enterHintsMode(markers, ((marker) -> marker.element.focus()))
 
+# Focus on first input element
+command_i = (vim) ->
+  i = 0
+  elements = vim.window.document.getElementsByTagName 'input'
+  while i < elements.length
+    element = elements[i]
+    if element.type == 'text'
+      style = vim.window.getComputedStyle element, null
+      display = style.getPropertyValue 'display'
+      if display != 'none'
+        element.focus()
+        element.select()
+        break
+    i++
+
 # Copy current URL to the clipboard
 command_yy = (vim) ->
   utils.writeToClipboard vim.window, vim.window.location.toString()
@@ -288,6 +303,7 @@ commandGroups =
     'P':        [ command_P,      _('help_command_P') ]
     'y,f':      [ command_yf,     _('help_command_yf') ]
     'v,f':      [ command_vf,     _('help_command_vf') ]
+    'i':        [ command_i,      _('help_command_i') ]
     'y,y':      [ command_yy,     _('help_command_yy') ]
     'r':        [ command_r,      _('help_command_r') ]
     'R':        [ command_R,      _('help_command_R') ]
